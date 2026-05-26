@@ -69,7 +69,7 @@ export default function DropZone({ onUpload, isUploading }: DropZoneProps) {
         <div className="flex-1">
           <h2 className="text-4xl font-black tracking-tight text-navy-dark uppercase italic leading-none">DROP BOOKS</h2>
           <p className="text-[10px] font-black text-slate-300 mt-2 uppercase tracking-[0.2em]">
-            EPUB, PDF, MOBI
+            EPUB, PDF, MOBI (UP TO 200MB)
           </p>
         </div>
 

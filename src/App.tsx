@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
-import { v4 as uuidv4 } from "uuid";
 import { motion, AnimatePresence } from "motion/react";
 
 import HomeView from "./components/HomeView";
@@ -22,7 +21,7 @@ export default function App() {
   const [userId] = useState(() => {
     const saved = localStorage.getItem(USER_ID_KEY);
     if (saved) return saved;
-    const newId = uuidv4();
+    const newId = crypto.randomUUID();
     localStorage.setItem(USER_ID_KEY, newId);
     return newId;
   });
@@ -102,14 +101,14 @@ export default function App() {
     formData.append("userId", userId);
 
     try {
-      const res = await fetch(`/api/rooms/${roomId}/upload`, {
+      const res = await window.fetch(`/api/rooms/${roomId}/upload`, {
         method: "POST",
         body: formData,
       });
       if (!res.ok) throw new Error("Upload failed");
     } catch (err) {
       console.error("Upload error:", err);
-      alert("Upload failed. Make sure the file is under 50MB and try again.");
+      alert("Upload failed. Make sure the file is under 200MB and try again.");
     } finally {
       setIsUploading(false);
     }
@@ -118,7 +117,7 @@ export default function App() {
   const handleDelete = async (fileId: string) => {
     if (!roomId) return;
     try {
-      await fetch(`/api/rooms/${roomId}/files/${fileId}`, { method: "DELETE" });
+      await window.fetch(`/api/rooms/${roomId}/files/${fileId}`, { method: "DELETE" });
     } catch (err) {
       console.error("Delete error:", err);
     }
@@ -184,7 +183,7 @@ export default function App() {
                   <span>P2P Encrypted</span>
                   <span>Auto-Delete (1h)</span>
                </div>
-               <span>FILE HUB v3.3.0 â SYNCED</span>
+               <span>FILE HUB v3.3.0 - SYNCED</span>
             </footer>
           </motion.div>
         )}

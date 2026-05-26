@@ -36,7 +36,10 @@ async function startServer() {
       cb(null, `${id}-${file.originalname}`);
     },
   });
-  const upload = multer({ storage });
+  const upload = multer({ 
+    storage,
+    limits: { fileSize: 200 * 1024 * 1024 } // 200MB limit
+  });
 
   // --- State Management (In-Memory) ---
   interface FileRecord {
