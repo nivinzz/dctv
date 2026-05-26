@@ -1,0 +1,16 @@
+{
+  "name": "DCTV-QuickSync",
+  "short_name": "QuickSync",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "description": "Minimalist Zero-friction File Transfer",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5602/5602732.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "DCTV-QuickSync",
+  "description": "Minimalist, zero-friction file transfer between devices with real-time room sync and end-to-end encryption.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
