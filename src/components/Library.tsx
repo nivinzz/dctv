@@ -7,10 +7,11 @@ import { QRCodeSVG } from "qrcode.react";
 interface LibraryProps {
   files: FileRecord[];
   onDownload: (file: FileRecord) => void;
+  onDelete: (fileId: string) => void;
   userId: string;
 }
 
-export default function Library({ files, onDownload, userId }: LibraryProps) {
+export default function Library({ files, onDownload, onDelete, userId }: LibraryProps) {
   const [activeQr, setActiveQr] = useState<string | null>(null);
 
   const formatSize = (bytes: number) => {
@@ -93,6 +94,10 @@ export default function Library({ files, onDownload, userId }: LibraryProps) {
                     </button>
 
                     <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(file.id);
+                      }}
                       className="text-slate-100 hover:text-red-500 transition-colors"
                     >
                       <Trash2 size={24} />

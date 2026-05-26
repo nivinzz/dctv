@@ -57,6 +57,9 @@ async function startServer() {
 
   const rooms = new Map<string, Room>();
 
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
   // --- API Routes ---
 
   // Upload file to a specific room
@@ -69,11 +72,11 @@ async function startServer() {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    const room = rooms.get(roomId);
+    let room = rooms.get(roomId);
     if (!room) {
-      // Clean up the file if room doesn't exist
-      fs.unlinkSync(file.path);
-      return res.status(404).json({ error: "Room not found" });
+      // Auto-create room if it doesn't exist yet (robustness)
+      room = { id: roomId, files: [], users: new Set() };
+      rooms.set(roomId, room);
     }
 
     const fileRecord: FileRecord = {
@@ -83,13 +86,32 @@ async function startServer() {
       size: file.size,
       mimeType: file.mimetype,
       uploadedAt: Date.now(),
-      senderId: userId,
+      senderId: userId || "anonymous",
     };
 
     room.files.push(fileRecord);
     io.to(roomId).emit("file:new", fileRecord);
 
     res.json(fileRecord);
+  });
+
+  // Delete file
+  app.delete("/api/rooms/:roomId/files/:fileId", (req, res) => {
+    const { roomId, fileId } = req.params;
+    const room = rooms.get(roomId);
+    if (!room) return res.status(404).json({ error: "Room not found" });
+
+    const fileIndex = room.files.findIndex(f => f.id === fileId);
+    if (fileIndex === -1) return res.status(404).json({ error: "File not found" });
+
+    const [file] = room.files.splice(fileIndex, 1);
+    const filePath = path.join(UPLOADS_DIR, file.filename);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    io.to(roomId).emit("file:deleted", fileId);
+    res.json({ success: true });
   });
 
   // Download file

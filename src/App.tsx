@@ -57,6 +57,10 @@ export default function App() {
       setFiles((prev) => [...prev, file]);
     });
 
+    newSocket.on("file:deleted", (fileId: string) => {
+      setFiles((prev) => prev.filter(f => f.id !== fileId));
+    });
+
     newSocket.on("room:user_joined", (count: number) => setUserCount(count));
     newSocket.on("room:user_left", (count: number) => setUserCount(count));
 
@@ -104,10 +108,19 @@ export default function App() {
       });
       if (!res.ok) throw new Error("Upload failed");
     } catch (err) {
-      console.error(err);
-      alert("Failed to upload file. Please try again.");
+      console.error("Upload error:", err);
+      alert("Upload failed. Make sure the file is under 50MB and try again.");
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleDelete = async (fileId: string) => {
+    if (!roomId) return;
+    try {
+      await fetch(`/api/rooms/${roomId}/files/${fileId}`, { method: "DELETE" });
+    } catch (err) {
+      console.error("Delete error:", err);
     }
   };
 
@@ -140,8 +153,8 @@ export default function App() {
                   <div className="w-6 h-6 border-2 border-white rounded-md relative after:content-[''] after:absolute after:bottom-1 after:left-1 after:right-1 after:h-0.5 after:bg-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-black tracking-tight text-navy-dark leading-none uppercase">DCTV</h1>
-                  <p className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest leading-none">Thanh Nguyễn</p>
+                  <h1 className="text-3xl font-black tracking-tight text-navy-dark leading-none uppercase">FILE HUB</h1>
+                  <p className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest leading-none">v 3.3.0</p>
                 </div>
               </header>
 
@@ -160,6 +173,7 @@ export default function App() {
                 <Library 
                   files={files} 
                   onDownload={handleDownload} 
+                  onDelete={handleDelete}
                   userId={userId} 
                 />
               </div>
