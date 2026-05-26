@@ -140,8 +140,8 @@ export default function App() {
                   <div className="w-6 h-6 border-2 border-white rounded-md relative after:content-[''] after:absolute after:bottom-1 after:left-1 after:right-1 after:h-0.5 after:bg-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-black tracking-tight text-navy-dark leading-none uppercase">FILE HUB</h1>
-                  <p className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest leading-none">v 3.3.0</p>
+                  <h1 className="text-3xl font-black tracking-tight text-navy-dark leading-none uppercase">DCTV</h1>
+                  <p className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest leading-none">Thanh Nguyễn</p>
                 </div>
               </header>
 
