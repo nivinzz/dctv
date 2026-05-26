@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 
 import HomeView from "./components/HomeView";
 import RoomHeader from "./components/RoomHeader";
-import DropZone from "./components/DropZone";
+import DropZone, { ActionSection } from "./components/DropZone";
 import Library from "./components/Library";
 import { FileRecord, RoomSyncData } from "./types";
 
@@ -34,7 +34,13 @@ export default function App() {
 
     const params = new URLSearchParams(window.location.search);
     const r = params.get("r");
-    if (r) setRoomId(r.toUpperCase());
+    if (r) {
+      setRoomId(r.toUpperCase());
+    } else {
+      // Auto-generate room if none provided
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      setRoomId(code);
+    }
   }, []);
 
   // Initialize Socket.io
@@ -97,7 +103,6 @@ export default function App() {
         body: formData,
       });
       if (!res.ok) throw new Error("Upload failed");
-      // Server will emit file:new to all room members
     } catch (err) {
       console.error(err);
       alert("Failed to upload file. Please try again.");
@@ -119,42 +124,53 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen selection:bg-neon-cyan selection:text-deep-navy">
+    <div className="min-h-screen selection:bg-navy-dark selection:text-white">
       <AnimatePresence mode="wait">
-        {!roomId ? (
-          <HomeView 
-            onJoinRoom={setRoomId} 
-            onNewRoom={generateRoomId} 
-            recentRooms={recentRooms}
-          />
-        ) : (
+        {roomId && (
           <motion.div 
             key="room"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="container mx-auto px-4 py-12 max-w-5xl"
+            className="container mx-auto px-6 py-12 max-w-7xl"
           >
-            <RoomHeader 
-              roomId={roomId} 
-              userCount={userCount} 
-              onRegenerate={handleLeave} 
-            />
-            
-            <DropZone onUpload={handleUpload} isUploading={isUploading} />
-            
-            <Library 
-              files={files} 
-              onDownload={handleDownload} 
-              userId={userId} 
-            />
+            <div className="flex flex-col gap-12">
+              <header className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-navy-dark rounded-2xl flex items-center justify-center text-white shadow-lg">
+                  <div className="w-6 h-6 border-2 border-white rounded-md relative after:content-[''] after:absolute after:bottom-1 after:left-1 after:right-1 after:h-0.5 after:bg-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-black tracking-tight text-navy-dark leading-none uppercase">FILE HUB</h1>
+                  <p className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest leading-none">v 3.3.0</p>
+                </div>
+              </header>
 
-            <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-2 glass rounded-full flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-500">
-               <span>P2P Encrypted</span>
-               <div className="w-1 h-1 rounded-full bg-slate-800" />
-               <span>Auto-Delete (1h)</span>
-               <div className="w-1 h-1 rounded-full bg-slate-800" />
-               <span>DCTV-Sync</span>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <RoomHeader 
+                  roomId={roomId} 
+                  userCount={userCount} 
+                  onRegenerate={handleLeave} 
+                />
+                <DropZone onUpload={handleUpload} isUploading={isUploading} />
+              </div>
+              
+              <ActionSection />
+
+              <div className="mt-16 pt-24 border-t border-slate-100">
+                <Library 
+                  files={files} 
+                  onDownload={handleDownload} 
+                  userId={userId} 
+                />
+              </div>
+            </div>
+
+            <footer className="mt-32 pb-12 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.3em] text-slate-200">
+               <div className="flex gap-10">
+                  <span>P2P Encrypted</span>
+                  <span>Auto-Delete (1h)</span>
+               </div>
+               <span>FILE HUB v3.3.0 â SYNCED</span>
             </footer>
           </motion.div>
         )}

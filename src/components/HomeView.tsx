@@ -19,67 +19,65 @@ export default function HomeView({ onJoinRoom, onNewRoom, recentRooms }: HomeVie
   };
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6">
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md text-center"
+        className="w-full max-w-md"
       >
-        <div className="flex justify-center mb-8">
-           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon-cyan to-indigo-500 flex items-center justify-center glow-cyan">
-              <Zap size={32} className="text-deep-navy fill-deep-navy" />
-           </div>
-        </div>
-        
-        <h1 className="text-4xl font-black text-white tracking-tighter mb-2">DCTV-QuickSync</h1>
-        <p className="text-slate-500 font-medium mb-12">Deep-navy minimalist file transfer.</p>
+        <header className="flex flex-col items-center gap-3 mb-16">
+          <div className="w-20 h-20 bg-navy-dark rounded-[2rem] flex items-center justify-center text-white shadow-xl mb-4">
+            <div className="w-10 h-10 border-4 border-white rounded-lg relative after:content-[''] after:absolute after:bottom-1 after:left-1 after:right-1 after:h-1 after:bg-white" />
+          </div>
+          <h1 className="text-5xl font-black tracking-tight text-navy-dark leading-none uppercase">FILE HUB</h1>
+          <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Minimalist File Sync</p>
+        </header>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative group">
             <input 
               type="text" 
               maxLength={6}
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
-              placeholder="Enter Room Code"
-              className="w-full bg-slate-800 border-2 border-slate-700/50 rounded-2xl px-6 py-5 text-2xl font-black text-center tracking-[0.5em] placeholder:tracking-normal placeholder:font-bold focus:border-neon-cyan focus:outline-none transition-all group-hover:border-slate-600"
+              placeholder="ENTER ROOM CODE"
+              className="w-full bg-white rounded-[2rem] px-8 py-8 text-3xl font-black text-center tracking-[0.4em] placeholder:tracking-normal placeholder:font-black placeholder:text-slate-100 text-navy-dark focus:outline-none transition-all card-shadow"
             />
             {code.length >= 4 && (
               <motion.button 
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 type="submit"
-                className="absolute right-3 top-3 bottom-3 aspect-square bg-neon-cyan text-deep-navy rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg"
+                className="absolute right-4 top-4 bottom-4 aspect-square bg-navy-dark text-white rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg"
               >
-                <ArrowRight size={24} />
+                <ArrowRight size={28} strokeWidth={3} />
               </motion.button>
             )}
           </div>
 
-          <div className="pt-2 text-slate-500 font-bold text-xs uppercase tracking-widest">or</div>
-
           <button 
             type="button"
             onClick={onNewRoom}
-            className="w-full bg-white text-deep-navy font-black py-5 rounded-2xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl"
+            className="w-full bg-white text-navy-dark font-black py-8 rounded-[2rem] flex items-center justify-center gap-3 hover:scale-[1.01] active:scale-[0.99] transition-all card-shadow uppercase tracking-widest text-xs"
           >
-            <Plus size={20} />
+            <Plus size={20} strokeWidth={3} />
             Create New Room
           </button>
         </form>
 
         {recentRooms.length > 0 && (
-          <div className="mt-16 text-left">
-             <div className="flex items-center gap-2 text-slate-500 mb-4 ml-2">
-                <History size={14} />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Recent Rooms</span>
+          <div className="mt-20">
+             <div className="flex items-center justify-center gap-3 text-slate-200 mb-6">
+                <div className="h-px bg-slate-100 flex-1" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Recent History</span>
+                <div className="h-px bg-slate-100 flex-1" />
              </div>
              <div className="grid grid-cols-3 gap-3">
                 {recentRooms.map((r) => (
                   <button 
                     key={r}
                     onClick={() => onJoinRoom(r)}
-                    className="glass py-3 px-2 rounded-xl text-xs font-black text-slate-400 hover:text-white hover:border-slate-500 transition-all text-center"
+                    className="bg-white py-4 px-4 rounded-2xl text-[11px] font-black text-slate-400 hover:text-navy-dark hover:scale-105 transition-all text-center card-shadow"
                   >
                     {r}
                   </button>

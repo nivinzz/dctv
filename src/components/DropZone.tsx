@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { UploadCloud, FileType, Zap, BarChart, RefreshCw } from "lucide-react";
+import { FileUp, Zap, Scissors, RefreshCw } from "lucide-react";
 import { motion } from "motion/react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -47,35 +47,38 @@ export default function DropZone({ onUpload, isUploading }: DropZoneProps) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full flex shrink-0">
       <motion.div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={handleClick}
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
         className={cn(
-          "relative group cursor-pointer aspect-[16/7] rounded-[2rem] border-2 border-dashed flex flex-col items-center justify-center transition-all duration-300 glass",
-          isDragOver ? "border-neon-cyan bg-neon-cyan/5" : "border-slate-700/50 hover:border-slate-600",
+          "bg-white rounded-[3rem] p-12 card-shadow flex items-center gap-10 cursor-pointer transition-all duration-300 min-h-[280px] w-full relative group",
+          isDragOver ? "ring-8 ring-navy-dark/5" : "hover:scale-[1.01]",
           isUploading && "pointer-events-none opacity-60"
         )}
       >
-        <div className={cn(
-          "p-5 rounded-3xl bg-slate-900/50 transition-transform duration-300 group-hover:scale-110",
-          isDragOver && "scale-110 text-neon-cyan"
-        )}>
-          <UploadCloud className={cn("w-10 h-10", isDragOver ? "text-neon-cyan" : "text-slate-500")} />
+        <div className="w-24 h-24 bg-navy-dark rounded-3xl flex items-center justify-center text-white shrink-0 shadow-2xl transition-transform group-hover:scale-110">
+          <FileUp size={40} strokeWidth={2.5} />
         </div>
         
-        <div className="mt-6 text-center">
-          <p className="text-lg font-semibold text-slate-100 italic">
-            {isDragOver ? "Drop to sync" : "Drag files here or click to browse"}
-          </p>
-          <p className="mt-1 text-sm text-slate-500">
-            PDF, EPUB, MOBI, AZW3 supported up to 50MB
+        <div className="flex-1">
+          <h2 className="text-4xl font-black tracking-tight text-navy-dark uppercase italic leading-none">DROP BOOKS</h2>
+          <p className="text-[10px] font-black text-slate-300 mt-2 uppercase tracking-[0.2em]">
+            EPUB, PDF, MOBI
           </p>
         </div>
+
+        <button 
+          onClick={(e) => { e.stopPropagation(); }}
+          className="bg-transparent border-2 border-red-50 text-red-500 text-[10px] font-black px-6 py-4 rounded-2xl uppercase tracking-widest hover:bg-red-50 transition-colors"
+        >
+          Reset to default
+        </button>
 
         <input 
           type="file" 
@@ -86,10 +89,10 @@ export default function DropZone({ onUpload, isUploading }: DropZoneProps) {
         />
 
         {isUploading && (
-          <div className="absolute inset-x-0 bottom-0 p-4">
-             <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden">
+          <div className="absolute inset-x-12 bottom-12">
+             <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
                 <motion.div 
-                  className="h-full bg-neon-cyan"
+                  className="h-full bg-navy-dark"
                   animate={{ x: ["-100%", "100%"] }}
                   transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
                 />
@@ -97,13 +100,16 @@ export default function DropZone({ onUpload, isUploading }: DropZoneProps) {
           </div>
         )}
       </motion.div>
+    </div>
+  );
+}
 
-      {/* Quick Action Bar */}
-      <div className="flex flex-wrap justify-center gap-3">
-         <ActionButton icon={<Zap size={16} />} label="Kepubify" />
-         <ActionButton icon={<BarChart size={16} />} label="Optimize PDF" />
-         <ActionButton icon={<RefreshCw size={16} />} label="Convert to EPUB" />
-      </div>
+export function ActionSection() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full">
+         <ActionButton icon={<RefreshCw size={24} strokeWidth={3} />} label="EPUB TO MOBI" />
+         <ActionButton icon={<Zap size={24} strokeWidth={3} />} label="KEPUBIFY" />
+         <ActionButton icon={<Scissors size={24} strokeWidth={3} />} label="OPTIMIZE PDF" />
     </div>
   );
 }
@@ -114,14 +120,16 @@ function ActionButton({ icon, label }: { icon: React.ReactNode, label: string })
     <button 
       onClick={() => setActive(!active)}
       className={cn(
-        "flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all border",
+        "bg-white h-32 rounded-[2.5rem] px-8 flex items-center gap-6 text-[12px] font-black uppercase tracking-[0.2em] transition-all card-shadow",
         active 
-          ? "bg-neon-cyan/20 border-neon-cyan text-neon-cyan glow-cyan" 
-          : "bg-slate-800/80 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-slate-100"
+          ? "ring-8 ring-navy-dark/5" 
+          : "hover:scale-[1.02]"
       )}
     >
-      {icon}
-      {label}
+      <div className="text-slate-200 shrink-0">
+        {icon}
+      </div>
+      <span className="text-navy-dark truncate">{label}</span>
     </button>
   );
 }

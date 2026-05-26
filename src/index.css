@@ -1,24 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Inter:wght@400;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-deep-navy: #0F172A;
-  --color-slate-800: #1E293B;
-  --color-neon-cyan: #22D3EE;
+  --font-sans: "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-bg-base: #F3F7FA;
+  --color-navy-dark: #0F172A;
+  --color-brand-blue: #1E293B;
 }
 
 @layer base {
   body {
-    @apply bg-deep-navy text-slate-100 font-sans antialiased;
+    @apply bg-bg-base text-navy-dark font-sans antialiased;
+    background-image: radial-gradient(circle at 50% -20%, #ffffff 0%, #F3F7FA 100%);
   }
 }
 
-.glass {
-  @apply bg-slate-800/40 backdrop-blur-md border border-slate-700/50;
+.card-shadow {
+  box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.08);
 }
 
-.glow-cyan {
-  box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+.item-shadow {
+  box-shadow: 0 4px 20px -5px rgba(15, 23, 42, 0.05);
 }
 
